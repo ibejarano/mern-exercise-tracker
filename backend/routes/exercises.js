@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let Exercise = require('../models/exercise.model');
+let ExerciseType = require('../models/exercisetype.model');
 
 router.route('/').get((req, res) => {
     Exercise.find()
@@ -12,6 +13,8 @@ router.route('/:id').get((req, res) => {
         .then(exercise => res.json(exercise))
         .catch(err => res.status(400).json('Error: '+ err));
 });
+
+/* ADD EXERCISE LOG */
 
 router.route('/add').post((req, res) => {
     const username = req.body.username;
@@ -28,7 +31,23 @@ router.route('/add').post((req, res) => {
 
     newExercise.save()
         .then(() => res.json('Exercise added!'))
-        .catch(err => res.status(400).jsonp('Error: '+err));
+        .catch(err => res.status(400).json('Error: '+err));
+});
+
+/* ADD EXERCISE TYPE WITH DESCRIPTION */
+
+router.route('/add-type').post((req,res) => {
+    const description = req.body.description;
+    const calories = req.body.calories;
+
+    const newExerciseType = new ExerciseType({
+        description,
+        calories
+    });
+
+    newExerciseType.save()
+        .then(() => res.json('Exercise type added!'))
+        .catch( err => res.status(400).json('Error: '+err))
 });
 
 router.route('/:id').delete((req, res) => {

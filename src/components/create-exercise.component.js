@@ -11,7 +11,8 @@ export default class CreateExercise extends Component {
             description: '',
             duration: 0,
             date: new Date(),
-            users: [] /*On our page will be a dropdown menu to select users */
+			users: [], /*On our page will be a dropdown menu to select users */
+			exerciseList: []
         };
 				this.onChangeUsername = this.onChangeUsername.bind(this);
 				this.onChangeDescription = this.onChangeDescription.bind(this);
@@ -29,7 +30,16 @@ export default class CreateExercise extends Component {
 							username : res.data[0].username
 						})
 					}
-				} )
+				} );
+			axios.get('http://localhost:5000/exercises-types')
+				.then( response => {
+					if (response.data.length > 0){
+						this.setState({
+							exerciseList: response.data.map( exercise => exercise.name),
+							description: response.data[0].name
+						})
+					}
+				});
 		}
 
     onChangeUsername(e){
@@ -94,7 +104,7 @@ export default class CreateExercise extends Component {
 								</select>
 							</div>
 							<div className="form-group">
-								<label>Descriotion: </label>
+								<label>Description: </label>
 								<input type="text"
 								className="form-control"
 								value={this.state.description}
